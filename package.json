@@ -1,0 +1,26 @@
+{
+  "name": "Sky-Fire",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "snowpack dev",
+    "build": "snowpack build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frazcaz97/Sky-Fire.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frazcaz97/Sky-Fire/issues"
+  },
+  "homepage": "https://github.com/frazcaz97/Sky-Fire#readme",
+  "devDependencies": {
+    "snowpack": "^3.1.1",
+    "typescript": "^4.2.3"
+  }
+}
