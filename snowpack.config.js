@@ -7,7 +7,8 @@ module.exports = {
     /* ... */
   },
   plugins: [
-    /* ... */
+    ['@snowpack/plugin-typescript', { tsc: "tsc" }], 
+    ['@snowpack/plugin-run-script', { cmd: "npx tsc", watch: "$1 --watch", output: "stream" }],
   ],
   packageOptions: {
     /* ... */
