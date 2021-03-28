@@ -4,7 +4,8 @@
 /** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {
   mount: {
-    /* ... */
+    "sauce/test/":"/",
+    "sauce/": "/sauce/",
   },
   plugins: [
     ['@snowpack/plugin-typescript', { tsc: "tsc" }], 
