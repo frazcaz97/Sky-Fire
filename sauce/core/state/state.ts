@@ -51,13 +51,14 @@ class State {
         print("state: game loop running");
         if (this.currentState !== "paused") {
             this.updateState = "running";
-            console.log(dt);
+            print(dt);
 
             this._request = window.requestAnimationFrame(this.running.bind(this));
         }
     }
 
     private eventListener(data: any, self: any): void {
+        print("State: event listener has been triggered");
         const actions = ["start", "stop", "pause", "resume"];
         if (actions.includes(data)) {
             switch (data) {
@@ -81,21 +82,23 @@ class State {
     }
 
     get currentState(): string {
+        print("State: returning current state");
         return this._currentState;
     }
 
     get states() {
+        print("State: return list of valid states");
         return Object.keys(this._states);
     }
 
     set updateState(value: string) {
-        print("state: trying to update game state...");
+        print("State: trying to update game state...");
         if (this.states.includes(value)) {
             this._currentState = value;
-            print(`state: game state updated to ${ value }`);
+            print(`State: game state updated to ${ value }`);
         }
         else {
-            print(`state: ${ value } state doesn't exist on enum: state`);
+            print(`State: ${ value } state doesn't exist`);
         }
     }
 }

@@ -27,6 +27,8 @@ class EventManager {
     /**
      * Subscribe function - Invoked by other files/ objects when they want to listen for specific events
      * @function
+     * @name subscribe
+     * @memberof EventManager
      * @param { string } type - A channel the subscription listens on to recieve events
      * @param { any } callback - What function to run when a subscription recieves an event
      * @param { object } [ self ] - Optional, reference to instance of an object, only needed for objects
@@ -45,6 +47,8 @@ class EventManager {
     /**
      * Publish function - Invoked by files/ objects when they want to publish data to a channel
      * @function
+     * @name publish
+     * @memberof EventManager
      * @param { string } type - A channel the publisher wants to publish data on
      * @param { any } [ data ] - Optional, data here will be published to the correct channel  
      */
