@@ -1,6 +1,7 @@
-import { enableDebugs, disableDebugs, print } from "./utils/debug/print.js";
-import eventManager from "./event/eventManager.js";
+import { print, isEnabled } from "./utils/debug/print.js";
+import EventManager from "./event/eventManager.js";
 import State from "./state/state.js";
+import Display from "./display/display.js";
 
 /**
  * This is the engine namespace (fe = frosting engine)
@@ -15,17 +16,12 @@ const fe = {
      */
     "debugs": {
         /**
-         * Enables debugs
-         * @name enable
-         * @memberof fe.debugs
+         * Enables/ Disables debugs
+         * @name isEnabled
+         * @memberof fe.isEnabled
+         * @param {boolean} value - Value to enable or disable the debugs
          */
-        "enable": enableDebugs,
-        /**
-         * Disables debugs
-         * @name disable
-         * @memberof fe.debugs
-         */
-        "disable": disableDebugs,
+        "isEnabled": isEnabled,
         /**
          * Logs a value to the console
          * @name log
@@ -39,13 +35,19 @@ const fe = {
      * @name event
      * @memberof fe
      */
-    "event": eventManager,
+    "event": EventManager,
     /**
      * State System - Game state system controls the entire system
      * @name state
      * @memberof fe
      */
     "state": State,
+    /**
+     * Display System - Used to render onto the screen, runs webGL by default with canvasAPI fall back
+     * @name display
+     * @memberof fe
+     */
+    "display": Display,
 }
 
 export default fe;
