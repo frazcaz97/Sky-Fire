@@ -74,7 +74,7 @@ class Display {
      * @name resizeFullscreen
      * @memberof Display
      */
-    resizeFullscreen() {
+    private resizeFullscreen(): void {
         if (this._isFullscreen) {
             print("Display: setting to fullscreen");
             this._canvas.width = window.innerWidth;
