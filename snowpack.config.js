@@ -5,7 +5,7 @@
 module.exports = {
   mount: {
     "sauce/test/":"/",
-    "sauce/": "/sauce/",
+    "sauce/": "/sauce",
   },
   plugins: [
     ['@snowpack/plugin-typescript', { tsc: "tsc" }], 
