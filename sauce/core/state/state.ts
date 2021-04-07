@@ -1,4 +1,5 @@
 import eventManager from "../event/eventManager.js";
+import fe from "../fe.js";
 import { print } from "../utils/debug/print.js";
 
 class State {
@@ -34,6 +35,7 @@ class State {
         print("state: game loop stopped");
         this.updateState = "stopped";
         window.cancelAnimationFrame(this._request);
+        fe.event.publish("purge");
     }
 
     pause(): void {
