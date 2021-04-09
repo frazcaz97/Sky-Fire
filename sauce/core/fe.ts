@@ -1,7 +1,9 @@
 import { print, isEnabled } from "./utils/debug/print.js";
+import fileType from "./utils/fileType.js";
 import EventManager from "./event/eventManager.js";
 import State from "./state/state.js";
 import Display from "./display/display.js";
+import ResourceManager from "./resource/resourceManager.js";
 
 /**
  * This is the engine namespace (fe = frosting engine)
@@ -30,6 +32,9 @@ const fe = {
          */
         "print": print,
     },
+    "utils": {
+        "fileType": fileType,
+    },
     /**
      * Event System - Allows objects and features publish events or subscribe to listen for them
      * @name event
@@ -48,6 +53,13 @@ const fe = {
      * @memberof fe
      */
     "display": Display,
+    /**
+     * Resource System - Used to preload resources into the game, objects access resources from the manager,
+     * this optimises the amount of loading and memory needed when the game is running.
+     * @name resource
+     * @memberof fe
+     */
+    "resource": ResourceManager,
 }
 
 export default fe;
