@@ -1,4 +1,5 @@
-import { print, isEnabled } from "./utils/debug/print.js";
+import { enableDebugs } from "./utils/debug/debug.js";
+import { print } from "./utils/debug/print.js";
 import fileType from "./utils/fileType.js";
 import EventManager from "./event/eventManager.js";
 import State from "./state/state.js";
@@ -23,7 +24,7 @@ const fe = {
          * @memberof fe.isEnabled
          * @param {boolean} value - Value to enable or disable the debugs
          */
-        "isEnabled": isEnabled,
+        "enableDebugs": enableDebugs,
         /**
          * Logs a value to the console
          * @name log
