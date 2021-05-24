@@ -26,11 +26,9 @@ class ResourceManager {
     private _totalResources: number;
     
     constructor() {
-        print("Resource: Initialising resource manager...");
         this._resources = {};
         this._totalResources = 0;
         EventManager.subscribe("purge", this.purge.bind(this));
-        print("Resource: Initialised");
     }
 
     /**
@@ -57,7 +55,7 @@ class ResourceManager {
             case "mp3":
                 this.loadAudio(name, path);
             default:
-                print("Resource: Asset file type not supported");
+                print("Asset type not supported for reasource management");
                 break
         }
     }
@@ -82,7 +80,6 @@ class ResourceManager {
      */
     private purge(): void {
         delete this._resources;
-        print("Resource: Assets purged");
     }
 
     /**
@@ -93,7 +90,6 @@ class ResourceManager {
      * @namespace ResourceManager
      */
     public request(name: string): any {
-        print("Resource: Requesting asset data...");
         if (this.resources[name].isLoaded) {
             return this.resources[name].data;    
         }
@@ -110,12 +106,10 @@ class ResourceManager {
      * @namespace ResourceManager
      */
     private loadImage(name: string, path: string): void {
-        print("Resouce: Loading image asset...");
         let img = new Image();
         img.onload = () => {
             this.resources[name].data = img;
             this.resources[name].isLoaded = true;
-            print("Resource: Image Asset loaded");
         }
         img.src = path;    
     }
@@ -128,13 +122,11 @@ class ResourceManager {
      * @namespace ResourceManager
      */
     private loadAudio(name: string, path: string): void {
-        print("Resource: Loading audio asset...");
         let audio = new Audio(path);
         const trigger = (event: any) => {
             this.resources[name].data = audio;
             this.resources[name].isLoaded = true;
             audio.removeEventListener("canplaythrough", trigger);   //resource add, no longer need the listener
-            print("Resource: Audio asset loaded");
         }
         audio.addEventListener("canplaythrough", trigger);  //when audio file is loaded add it to the resource pool
     }
@@ -147,7 +139,6 @@ class ResourceManager {
      * @namespace ResourceManager
      */
     public preLoad(callback: any): void {
-        print("Resource: Preloading assets...");
         EventManager.subscribe("preload", callback);
         
         let timer = setInterval(() => {
@@ -161,7 +152,6 @@ class ResourceManager {
             }
             if (totalLoaded === assetTotal) {
                 clearInterval(timer);   //assets all loaded, delete the timer
-                print("Resource: All assets preloaded");
                 EventManager.publish("preload");
                 EventManager.unsubscribe("preload", callback);  //delete sub now that preload is complete
             }

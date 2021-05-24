@@ -1,5 +1,3 @@
-import { print } from "../utils/debug/print.js";
-
 class EventManager {
     /**
      * Stores the total number of events that have been published during the life span of the game engine
@@ -20,10 +18,8 @@ class EventManager {
     private _subscriptions: Array<any>;
 
     constructor() {
-        print("Event: initialising...");
         this._totalEvents = 0;
         this._subscriptions = [];
-        print("Event: initialised");
     }
 
     /**
@@ -36,7 +32,6 @@ class EventManager {
      * @param { object } [ self ] - Optional, reference to instance of an object, only needed for objects
      */
     subscribe(type: string, callback: any, self?: object):void {
-        print(`Event: adding new subscription for type: ${ type }, with callback: ${ callback }`);
 
         //add a new subscription ( hash table ) to the array
         this.subscriptions.push({
@@ -55,7 +50,6 @@ class EventManager {
      * @param { any } callback - function to run then event is published to subscriber 
      */
     unsubscribe(type: string, callback: any): void {
-        print(`Event: removing subscription for type: ${ type }, with callback: ${ callback }`);
 
         for (let sub in this.subscriptions) {
             if (this.subscriptions[sub].type === type && this.subscriptions[sub].callback === callback) {
@@ -63,7 +57,6 @@ class EventManager {
             }
         }
         this._subscriptions = this._subscriptions.filter(Boolean);
-        print("Event: removed subscription");
     }
 
     /**
@@ -76,7 +69,6 @@ class EventManager {
      */
     publish(type: string, data?: any): void {
         this._totalEvents++;
-        print(`Event: publishing event with type: ${ type } and data: ${ data }`);
 
         //loop through the array of subscribers, if the types( A channel ) match then invoke the callback and pass in the data and an object reference or null 
         for (let subscriber in this.subscriptions) {
@@ -89,12 +81,10 @@ class EventManager {
     }
 
     get totalEvents(): number {
-        print("Event: return total events number");
         return this._totalEvents;
     }
 
     get subscriptions(): any {
-        print("Event: returning subscribers");
         return this._subscriptions;
     }
 }
