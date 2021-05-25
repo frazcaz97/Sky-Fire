@@ -1,3 +1,4 @@
+import { isEnabled } from "../utils/debug/debug.js"
 import { print } from "../utils/debug/print.js";
 import eventManager from "../event/eventManager.js";
 import fe from "../fe.js";
@@ -46,7 +47,15 @@ class State {
     private running(dt: number): void {
         if (this.currentState !== "paused") {
             this.updateState = "running";
-
+            if (isEnabled) {    //when debugs are enabled display the metrics and update the FPS metrics
+                fe.debugs.performance.displayMetrics();
+                
+                fe.debugs.performance.addMetric = "FPS";
+                eventManager.publish("performance", {
+                    "name": "FPS",
+                    "value": dt
+                });
+            }
             this._request = window.requestAnimationFrame(this.running.bind(this));
         }
     }
