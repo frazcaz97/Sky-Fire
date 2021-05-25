@@ -1,5 +1,6 @@
-import { enableDebugs } from "./utils/debug/debug.js";
+import { enableDebugs, isEnabled } from "./utils/debug/debug.js";
 import { print } from "./utils/debug/print.js";
+import Performance from "./utils/debug/performance.js";
 import fileType from "./utils/fileType.js";
 import EventManager from "./event/eventManager.js";
 import State from "./state/state.js";
@@ -20,11 +21,17 @@ const fe = {
     "debugs": {
         /**
          * Enables/ Disables debugs
-         * @name isEnabled
-         * @memberof fe.isEnabled
+         * @name enableDebugs
+         * @memberof fe.enableDebugs
          * @param {boolean} value - Value to enable or disable the debugs
          */
         "enableDebugs": enableDebugs,
+        /**
+         * check if debugs are enabled
+         * @name isEnabled
+         * @memberof fe.isEnabled
+         */
+        "isEnabled": isEnabled,
         /**
          * Logs a value to the console
          * @name log
@@ -32,6 +39,12 @@ const fe = {
          * @param {any} value - Value to be logged to the console
          */
         "print": print,
+
+        /**
+         * logs performance metrics table to console
+         * @name 
+         */
+        "performance": Performance
     },
     "utils": {
         "fileType": fileType,
