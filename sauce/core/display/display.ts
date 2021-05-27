@@ -81,11 +81,11 @@ class Display {
         }
     }
 
-    get contextType(): any {
+    get contextType(): string {
         return this._ctxType;
     }
 
-    get context(): any {
+    get context(): WebGLRenderingContext | CanvasRenderingContext2D {
         return this._context;
     }
 

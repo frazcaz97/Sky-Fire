@@ -3,6 +3,22 @@ import fileType from "../utils/fileType.js";
 import EventManager from "../event/eventManager.js";
 
 /**
+ * type defined for this._resources dynamic object
+ * @name resource
+ * @typedef { [name: string]: {
+ *      data: HTMLImageElement | HTMLAudioElement | null, 
+ *      isLoaded: boolean
+ *  } 
+ * }
+ */
+type resource = {
+    [name: string]: {
+        data: HTMLImageElement | HTMLAudioElement | null;
+        isLoaded: boolean;
+    }
+}
+
+/**
  * Resouce Manager - (Singleton) loads and stores assets needed for the game
  * @class
  * @classdesc preloads, loads, stores and allowsd access of game assets
@@ -15,7 +31,7 @@ class ResourceManager {
      * @name _resources
      * @type { any }
      */
-    private _resources: any;
+    private _resources: resource;
 
     /**
      * Stores the total number of assets loaded
@@ -79,7 +95,9 @@ class ResourceManager {
      * @namespace ResourceManager
      */
     private purge(): void {
-        delete this._resources;
+        for (let resource in this.resources) {
+            delete this.resources[resource];
+        }
     }
 
     /**
@@ -106,7 +124,7 @@ class ResourceManager {
      * @namespace ResourceManager
      */
     private loadImage(name: string, path: string): void {
-        let img = new Image();
+        let img: HTMLImageElement = new Image();
         img.onload = () => {
             this.resources[name].data = img;
             this.resources[name].isLoaded = true;
@@ -122,8 +140,8 @@ class ResourceManager {
      * @namespace ResourceManager
      */
     private loadAudio(name: string, path: string): void {
-        let audio = new Audio(path);
-        const trigger = (event: any) => {
+        let audio: HTMLAudioElement = new Audio(path);
+        const trigger = () => {
             this.resources[name].data = audio;
             this.resources[name].isLoaded = true;
             audio.removeEventListener("canplaythrough", trigger);   //resource add, no longer need the listener
@@ -138,7 +156,7 @@ class ResourceManager {
      * @name preLoad
      * @namespace ResourceManager
      */
-    public preLoad(callback: any): void {
+    public preLoad(callback: Function): void {
         EventManager.subscribe("preload", callback);
         
         let timer = setInterval(() => {
@@ -158,7 +176,7 @@ class ResourceManager {
         },0);
     }
 
-    get resources(): any {
+    get resources(): resource {
         return this._resources;
     }
 

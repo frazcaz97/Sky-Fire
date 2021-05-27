@@ -2,6 +2,7 @@ import { enableDebugs, isEnabled } from "./utils/debug/debug.js";
 import { print } from "./utils/debug/print.js";
 import Performance from "./utils/debug/performance.js";
 import fileType from "./utils/fileType.js";
+import isInRange from "./utils/range.js";
 import EventManager from "./event/eventManager.js";
 import State from "./state/state.js";
 import Display from "./display/display.js";
@@ -22,14 +23,14 @@ const fe = {
         /**
          * Enables/ Disables debugs
          * @name enableDebugs
-         * @memberof fe.enableDebugs
+         * @memberof fe.debugs
          * @param {boolean} value - Value to enable or disable the debugs
          */
         "enableDebugs": enableDebugs,
         /**
          * check if debugs are enabled
          * @name isEnabled
-         * @memberof fe.isEnabled
+         * @memberof fe.debugs
          */
         "isEnabled": isEnabled,
         /**
@@ -39,15 +40,29 @@ const fe = {
          * @param {any} value - Value to be logged to the console
          */
         "print": print,
-
         /**
          * logs performance metrics table to console
          * @name 
+         * @memberof fe.debugs
          */
         "performance": Performance
     },
     "utils": {
+        /**
+         * returns the file extension of a file type
+         * @name fileType
+         * @memberof fe.utils
+         */
         "fileType": fileType,
+        /**
+         * checks if a value is within range
+         * @name isInRange
+         * @memberof fe.debugs
+         * @param {number} value - value to check
+         * @param {number} min - minimum range value
+         * @param {number} max - maximum range value
+         */
+        "isInRange": isInRange
     },
     /**
      * Event System - Allows objects and features publish events or subscribe to listen for them

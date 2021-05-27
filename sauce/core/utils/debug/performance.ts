@@ -2,10 +2,10 @@ import eventManager from "../../event/eventManager.js";
 
 /**
  * type defined for this._metrics dynamic object
- * @name metric
+ * @name metricObj
  * @typedef { [name: string]: any }
  */
-type metric = {
+type metricObj = {
     [name: string]: any
 }
 
@@ -18,7 +18,7 @@ class Performance {
      * @property
      * @type { metrics }
      */
-    private _metrics: metric;
+    private _metrics: metricObj;
     
     constructor() {
         this._metrics = {};
@@ -33,9 +33,9 @@ class Performance {
      * @param data - Stores the data it recieves for the metrics 
      * @param self - Stores the object instance
      */
-    private updateMetric(data: any, self: any): void {   
+    private updateMetric(data: metricData, self: this): void {   
         for (let metric in self._metrics) {
-            const arr = Object.keys(self._metrics);
+            const arr: string[] = Object.keys(self._metrics);
             if (arr.includes(data.name)) {
                 self._metrics[metric] = data.value;
             }
@@ -48,7 +48,7 @@ class Performance {
      * @method
      * @name displayMetrics
      */
-    public displayMetrics(): void {
+    public displayMetrics(): void { //TODO: change this to be a display on the page
         console.table(this._metrics);
     }
 

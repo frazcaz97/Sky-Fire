@@ -1,3 +1,24 @@
+/**
+ * type defined for this_subscriptions dynamic Array
+ * @name subscription
+ * @typedef {
+ *      type: string;
+ *      self: object | null;
+ *      callback: Function
+ * }
+ */
+type subscription = {
+    type: string;
+    self: object | null;
+    callback: Function
+
+}
+
+/**
+ * Event Manager - (Singleton) keeps track of events happening in the game and engine
+ * @class
+ * @classdesc add subscriptions, removes subscriptions, allow publishing and receiving of events
+ */
 class EventManager {
     /**
      * Stores the total number of events that have been published during the life span of the game engine
@@ -15,7 +36,7 @@ class EventManager {
      * @name _subscriptions
      * @type { Array<any> }
      */
-    private _subscriptions: Array<any>;
+    private _subscriptions: subscription[];
 
     constructor() {
         this._totalEvents = 0;
@@ -29,9 +50,9 @@ class EventManager {
      * @memberof EventManager
      * @param { string } type - A channel the subscription listens on to recieve events
      * @param { any } callback - function to run then event is published to subscriber
-     * @param { object } [ self ] - Optional, reference to instance of an object, only needed for objects
+     * @param { this } [ self ] - Optional, reference to instance of an object, only needed for objects
      */
-    subscribe(type: string, callback: any, self?: object):void {
+    subscribe(type: string, callback: Function, self?: this):void {
 
         //add a new subscription ( hash table ) to the array
         this.subscriptions.push({
@@ -47,9 +68,9 @@ class EventManager {
      * @name unsubscribe
      * @memberof EventManager
      * @param { string } type - A channel the subscription listens on to receives events 
-     * @param { any } callback - function to run then event is published to subscriber 
+     * @param { Function } callback - function to run then event is published to subscriber 
      */
-    unsubscribe(type: string, callback: any): void {
+    unsubscribe(type: string, callback: Function): void {
 
         for (let sub in this.subscriptions) {
             if (this.subscriptions[sub].type === type && this.subscriptions[sub].callback === callback) {
@@ -73,8 +94,8 @@ class EventManager {
         //loop through the array of subscribers, if the types( A channel ) match then invoke the callback and pass in the data and an object reference or null 
         for (let subscriber in this.subscriptions) {
             if (this.subscriptions[subscriber].type === type) {
-                const callback = this.subscriptions[subscriber].callback;
-                const self = this.subscriptions[subscriber].self;
+                const callback: Function = this.subscriptions[subscriber].callback;
+                const self: object | null = this.subscriptions[subscriber].self;
                 callback(data, self);
             }
         }
@@ -84,7 +105,7 @@ class EventManager {
         return this._totalEvents;
     }
 
-    get subscriptions(): any {
+    get subscriptions(): subscription[] {
         return this._subscriptions;
     }
 }
