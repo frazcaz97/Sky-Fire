@@ -52,7 +52,7 @@ class EventManager {
      * @param { any } callback - function to run then event is published to subscriber
      * @param { this } [ self ] - Optional, reference to instance of an object, only needed for objects
      */
-    subscribe(type: string, callback: Function, self?: this):void {
+    subscribe(type: string, callback: Function, self?: object):void {
 
         //add a new subscription ( hash table ) to the array
         this.subscriptions.push({
