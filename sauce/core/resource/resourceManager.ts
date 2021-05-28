@@ -56,7 +56,7 @@ class ResourceManager {
      * @param name - the name you want to give the asset stored
      * @param path - the filepath to the asset
      */
-    public addResource(name: string, path: string): void {
+    public addResource(name: string, path: string, callback?: Function): void {
         this._totalResources++;
         const type: string = fileType(path);
 
@@ -138,6 +138,7 @@ class ResourceManager {
         img.onload = () => {
             this.resources[name].data = img;
             this.resources[name].isLoaded = true;
+            EventManager.publish(`resource-image-${name}`);
         }
         img.src = path;    
     }
@@ -156,6 +157,7 @@ class ResourceManager {
         const trigger = () => {
             this.resources[name].data = audio;
             this.resources[name].isLoaded = true;
+            EventManager.publish(`resource-audio-${name}`);
             audio.removeEventListener("canplaythrough", trigger);   //resource add, no longer need the listener
         }
         audio.addEventListener("canplaythrough", trigger);  //when audio file is loaded add it to the resource pool
@@ -177,6 +179,7 @@ class ResourceManager {
             {
                 this.resources[name].data = data;
                 this.resources[name].isLoaded = true;
+                EventManager.publish(`resource-json-${name}`);
             });
     }
 
