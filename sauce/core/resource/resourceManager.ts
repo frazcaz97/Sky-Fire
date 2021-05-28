@@ -13,7 +13,7 @@ import EventManager from "../event/eventManager.js";
  */
 type resource = {
     [name: string]: {
-        data: HTMLImageElement | HTMLAudioElement | null;
+        data: HTMLImageElement | HTMLAudioElement | JSON | null;
         isLoaded: boolean;
     }
 }
@@ -29,7 +29,7 @@ class ResourceManager {
      * Stores all the assets
      * @private
      * @name _resources
-     * @type { any }
+     * @type { resource }
      */
     private _resources: resource;
 
@@ -49,10 +49,12 @@ class ResourceManager {
 
     /**
      * Method is used to add an asset to the resource pool
-     * @method
+     * @method addResource
      * @public
      * @name addResource
      * @namespace ResourceManager
+     * @param name - the name you want to give the asset stored
+     * @param path - the filepath to the asset
      */
     public addResource(name: string, path: string): void {
         this._totalResources++;
@@ -70,6 +72,10 @@ class ResourceManager {
                 break;
             case "mp3":
                 this.loadAudio(name, path);
+                break;
+            case "json":
+                this.loadJSON(name, path);
+                break;
             default:
                 print("Asset type not supported for reasource management");
                 break
@@ -78,10 +84,11 @@ class ResourceManager {
 
     /**
      * Method is used to remove an asset from the resource pool
-     * @method
+     * @method removeResource
      * @public
      * @name removeResource
      * @namespace ResourceManager
+     * @param name - used to find the asset you want to remove from memory
      */
     public removeResource(name: string): void {
         delete this.resources[name];
@@ -89,7 +96,7 @@ class ResourceManager {
 
     /**
      * Method is run only when a purge event is published to delete all asset data
-     * @method
+     * @method purge
      * @private
      * @name purge
      * @namespace ResourceManager
@@ -102,10 +109,11 @@ class ResourceManager {
 
     /**
      * Method is called when a file wants to use the asset
-     * @method
+     * @method request
      * @public
      * @name request
      * @namespace ResourceManager
+     * @param name - used to request an asset from memory
      */
     public request(name: string): any {
         if (this.resources[name].isLoaded) {
@@ -118,10 +126,12 @@ class ResourceManager {
 
     /**
      * Method is run by addResource method when we need to load an image file
-     * @method
+     * @method loadImage
      * @private
      * @name loadImage
      * @namespace ResourceManager
+     * @param name - asset name provided when addResource method is called
+     * @param path - file path to the asset provided when addResource method is called
      */
     private loadImage(name: string, path: string): void {
         let img: HTMLImageElement = new Image();
@@ -134,10 +144,12 @@ class ResourceManager {
 
     /**
      * Method is run by addResource method when we need to load an audio file
-     * @method
+     * @method loadAudio
      * @private
      * @name loadAudio
      * @namespace ResourceManager
+     * @param name - asset name provided when addResource method is called
+     * @param path - file path to the asset provided when addResource method is called
      */
     private loadAudio(name: string, path: string): void {
         let audio: HTMLAudioElement = new Audio(path);
@@ -150,11 +162,31 @@ class ResourceManager {
     }
 
     /**
+     * Method is run by addResource method when we need to load an audio file
+     * @method loadJSON
+     * @private
+     * @name loadJSON
+     * @namespace ResourceManager
+     * @param name - asset name provided when addResource method is called
+     * @param path - file path to the asset provided when addResource method is called
+     */
+    private loadJSON(name: string, path: string):void {
+        fetch(path)
+        .then(response => response.json())
+        .then(data => 
+            {
+                this.resources[name].data = data;
+                this.resources[name].isLoaded = true;
+            });
+    }
+
+    /**
      * Method is run by the game to preload any and all assets it needs before starting the game
      * @method
      * @public
      * @name preLoad
      * @namespace ResourceManager
+     * @param callback - callback function which is run when all assets are preloaded
      */
     public preLoad(callback: Function): void {
         EventManager.subscribe("preload", callback);
