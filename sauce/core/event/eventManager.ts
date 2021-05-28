@@ -96,7 +96,12 @@ class EventManager {
             if (this.subscriptions[subscriber].type === type) {
                 const callback: Function = this.subscriptions[subscriber].callback;
                 const self: object | null = this.subscriptions[subscriber].self;
-                callback(data, self);
+                if (data !== undefined) {
+                    callback(data, self);    
+                }
+                else {
+                    callback(self);
+                }
             }
         }
     }
