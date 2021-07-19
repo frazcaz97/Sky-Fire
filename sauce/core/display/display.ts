@@ -85,6 +85,10 @@ class Display {
         return this._ctxType;
     }
 
+    get canvas(): HTMLCanvasElement {
+        return this._canvas;
+    } 
+
     get context(): WebGLRenderingContext | CanvasRenderingContext2D {
         return this._context;
     }
