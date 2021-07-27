@@ -55,8 +55,9 @@ class ResourceManager {
      * @namespace ResourceManager
      * @param name - the name you want to give the asset stored
      * @param path - the filepath to the asset
+     * @param callback - callback function when asset is loaded
      */
-    public addResource(name: string, path: string, callback?: Function): void {
+    public addResource(name: string, path: string): void {
         this._totalResources++;
         const type: string = fileType(path);
 
@@ -116,11 +117,16 @@ class ResourceManager {
      * @param name - used to request an asset from memory
      */
     public request(name: string): any {
-        if (this.resources[name].isLoaded) {
-            return this.resources[name].data;    
+        if (this.resources[name] !== undefined) {
+            if (this.resources[name].isLoaded) {
+                return this.resources[name].data;    
+            }
+            else {
+                console.error(`Resource: ${ name } should have loaded already hahahaha, if not then you are probably going to have to rewrite this class`);
+            }
         }
         else {
-            console.error(`Resource: ${ name } should have loaded already hahahaha, if not then you are probably going to have to rewrite this class`);
+            return null;
         }
     }
 
