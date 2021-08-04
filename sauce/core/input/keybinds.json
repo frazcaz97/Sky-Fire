@@ -1,4 +1,6 @@
 {
     "moveUp": "KeyW",
-    "moveDown": "KeyS"
+    "moveDown": "KeyS",
+    "moveLeft": "KeyA",
+    "moveRight": "KeyD"
 }
