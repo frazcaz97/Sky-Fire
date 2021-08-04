@@ -46,7 +46,7 @@ export default class InputComponent {
      */
     public update(): void {
         const keymap = InputManager.keymap;
-
+        
         for (let binding in this._callbackFunction) {
             const key = this._callbackFunction[binding].input;
             const keyMapValue = keymap[key];
@@ -65,7 +65,7 @@ export default class InputComponent {
         for (let binding in this._JSON) {
             if (this._parent[binding] !== undefined) {
                 this._callbackFunction.push({
-                    "callback": this._parent[binding],
+                    "callback": this._parent[binding].bind(this._parent),
                     "input": this._JSON[binding]
                 });
             }
@@ -85,5 +85,9 @@ export default class InputComponent {
     private fileLoaded(self: this): any {
         self._JSON = ResourceManager.request("keybinds");
         self.match();
+    }
+
+    get JSON(): any {
+        return this._JSON;
     }
 }
