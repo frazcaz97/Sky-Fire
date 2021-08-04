@@ -1,4 +1,4 @@
 {
-    "testKeyBindOne": "KeyW",
-    "testKeyBindTwo": "KeyS"
+    "moveUp": "KeyW",
+    "moveDown": "KeyS"
 }
