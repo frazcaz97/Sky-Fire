@@ -5,7 +5,7 @@
  * @param max - maximum range value
  * @returns { boolean }
  */
-const isInRange = (value: number, min: number, max: number) => {
+const range = (value: number, min: number, max: number) => {
     let result: boolean;
 
     result = value >= min && value <= max ? true : false;
@@ -13,4 +13,4 @@ const isInRange = (value: number, min: number, max: number) => {
     return result;
 }
 
-export default isInRange;
+export default range;
