@@ -1,9 +1,9 @@
 /**
- * Vector 3 class - handles vector maths
+ * Vector 2 class - handles vector maths
  * @class
- * @classdesc A vector 3 class that uses the z axis for draw order, class allows you to perform vector math
+ * @classdesc A vector 2 class used for positioning sprites on a screen
  */
-export default class vec3 {
+export default class vec2 {
 
     /**
      * x axis
@@ -19,27 +19,19 @@ export default class vec3 {
      * @type { number }
      */
     private _y: number;
-    /**
-     * z axis
-     * @private
-     * @name _z
-     * @type { number }
-     */
-    private _z: number;
 
-    constructor(x: number, y: number, z: number) {
+    constructor(x: number, y: number) {
         this._x = x;
         this._y = y;
-        this._z = z;
     }
 
     /**
      * add a vectors x and y to this vector
      * @method
      * @name add
-     * @memberof vec3
+     * @memberof vec2
      */
-    public add(vector: vec3): void {
+    public add(vector: vec2): void {
         this._x += vector.x;
         this._y += vector.y;        
     }
@@ -48,9 +40,9 @@ export default class vec3 {
      * subtract a vectors x and y to this vector
      * @method
      * @name sub
-     * @memberof vec3
+     * @memberof vec2
      */
-    public sub(vector: vec3): void {
+    public sub(vector: vec2): void {
         this._x -= vector.x;
         this._y -= vector.y;
     }
@@ -59,7 +51,7 @@ export default class vec3 {
      * multiply this vectors x and y with a scalar
      * @method
      * @name multi
-     * @memberof vec3
+     * @memberof vec2
      */
     public multi(scalar: number): void {
         this._x *= scalar;
@@ -70,7 +62,7 @@ export default class vec3 {
      * divide this vectors x and y with a scalar
      * @method
      * @name div
-     * @memberof vec3
+     * @memberof vec2
      */
     public div(scalar: number): void {
         this._x /= scalar;
@@ -81,32 +73,31 @@ export default class vec3 {
      * return the direction this vector is facing from another
      * @method
      * @name direction
-     * @memberof vec3
+     * @memberof vec2
      */
-    public direction(vector: vec3): vec3 {
-        return new vec3(this._x - vector.x, this._y - vector.y, this._z);
+    public direction(vector: vec2): vec2 {
+        return new vec2(this._x - vector.x, this._y - vector.y);
     }
 
     /**
      * return the absolute distance of this vector from another
      * @method
      * @name distance
-     * @memberof vec3
+     * @memberof vec2
      */
-    public distance(vector: vec3): vec3 {
+    public distance(vector: vec2): vec2 {
         const x = Math.abs(this._x - vector.x);
         const y = Math.abs(this._y - vector.y);
-        const z = this._z;
-        return new vec3(x, y, z);
+        return new vec2(x, y);
     }
 
     /**
      * return the dot product of this vector from another
      * @method
      * @name dot
-     * @memberof vec3
+     * @memberof vec2
      */
-    public dot(vector: vec3): number {
+    public dot(vector: vec2): number {
         return ((this.x * vector.x) + (this.y * vector.y));
     }
 
@@ -114,7 +105,7 @@ export default class vec3 {
      * return the magnitude of this vector
      * @method
      * @name magnitude
-     * @memberof vec3
+     * @memberof vec2
      */
     public magnitude(): number {
         return Math.sqrt((this._x * this._x) + (this._y * this._y));
@@ -124,9 +115,9 @@ export default class vec3 {
      * return the normal of this vector
      * @method
      * @name normalise
-     * @memberof vec3
+     * @memberof vec2
      */
-    public normalise(): vec3 {
+    public normalise(): vec2 {
         let mag = this.magnitude();
         let nx = 0;
         let ny = 0;
@@ -136,7 +127,7 @@ export default class vec3 {
             ny = this._y / this.magnitude();
         }
 
-        return new vec3(nx, ny, this._z); 
+        return new vec2(nx, ny); 
     }
 
 
@@ -146,13 +137,5 @@ export default class vec3 {
 
     get y(): number {
         return this._y;
-    }
-
-    get z(): number {
-        return this._z;
-    }
-
-    set z(value: number) {
-        this._z = value;
     }
 }
