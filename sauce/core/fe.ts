@@ -3,7 +3,7 @@ import { print } from "./utils/debug/print.js";
 import Performance from "./utils/debug/performance.js";
 import fileType from "./utils/fileType.js";
 import range from "./utils/math/range.js";
-import vec3 from "./utils/math/vec3.js";
+import vec2 from "./utils/math/vec2.js";
 import EventManager from "./event/eventManager.js";
 import State from "./state/state.js";
 import Display from "./display/display.js";
@@ -87,9 +87,8 @@ const fe = {
          * @memberof fe.Math
          * @param {number} x - value of x positional
          * @param {number} y - value of y positional
-         * @param {number} z - value of z positional
          */
-        "vec3": vec3,
+        "vec2": vec2,
     },
     /**
      * Event System - Allows objects and features publish events or subscribe to listen for them
