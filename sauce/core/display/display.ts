@@ -19,9 +19,9 @@ class Display {
      * Contains the rendering context, only returns the canvasAPI rendering context
      * @private
      * @name _context
-     * @type { WebGLRenderingContext | CanvasRenderingContext2D }
+     * @type { CanvasRenderingContext2D }
      */
-    private _context: WebGLRenderingContext | CanvasRenderingContext2D;
+    private _context: CanvasRenderingContext2D;
 
     /**
      * Contains the type of rendering context as a string, by default is set to canvasAPI
@@ -59,7 +59,7 @@ class Display {
         this._canvas = <HTMLCanvasElement>document.querySelector("#canvas");
         this._width = this._canvas.width;
         this._height = this._canvas.height;
-        this._context = <WebGLRenderingContext | CanvasRenderingContext2D>this._canvas.getContext("2d");    //we are defaulting to canvasAPI until we are ready to learn webGL
+        this._context = <CanvasRenderingContext2D>this._canvas.getContext("2d");    //we are defaulting to canvasAPI until we are ready to learn webGL
         this._ctxType = "canvasAPI";
         this._isFullscreen = false;
         window.onresize = this.resizeFullscreen.bind(this); //dynamically resizes the canvas when window.onresize is triggered
@@ -89,7 +89,7 @@ class Display {
         return this._canvas;
     } 
 
-    get context(): WebGLRenderingContext | CanvasRenderingContext2D {
+    get context(): CanvasRenderingContext2D {
         return this._context;
     }
 
