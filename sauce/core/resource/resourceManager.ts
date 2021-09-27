@@ -122,7 +122,8 @@ class ResourceManager {
                 return this.resources[name].data;    
             }
             else {
-                console.error(`Resource: ${ name } should have loaded already hahahaha, if not then you are probably going to have to rewrite this class`);
+                print(`Resource: ${ name } not finished loading`);
+                return false;
             }
         }
         else {
