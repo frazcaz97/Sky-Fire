@@ -13,6 +13,7 @@ import InputComponent from "./input/inputComponent.js";
 import Renderer from "./render/renderer.js";
 import SpriteComponent from "./render/components/spriteComponent.js";
 import AnimationComponent from "./render/components/animationComponent.js";
+import Camera from "./camera/camera.js";
 
 /**
  * This is the engine namespace (fe = frosting engine)
@@ -140,7 +141,13 @@ const fe = {
             "sprite": SpriteComponent,
             "animation": AnimationComponent
         }
-    }
+    },
+    /**
+     * Camera Class - Used to convert betrween game units and screen units, draw culling etc.
+     * @name Camera
+     * @memberof fe
+     */
+    "camera": Camera,
 }
 
 export default fe;
