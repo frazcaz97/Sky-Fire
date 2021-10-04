@@ -49,22 +49,11 @@ class CanvasImage {
     public draw(image: ImageBitmap, batch: any): void { //batch type shouldn't be any, but right now its to complicated a type for me to be bothered
         for (let item in batch) {
             const asset = batch[item];
-            const length = Object.keys(asset).length;
-
-            if (length === 3) {
-                const scaling = this.getScaling(asset.scale, image);
-                this._ctx.drawImage(image, asset.dx, asset.dy, scaling[0], scaling[1]);
-            }
-            else if (length === 7) {
-                const scaling = this.getScaling(asset.scale, image);
-                this._ctx.drawImage(image, asset.sx, asset.sy, asset.sw, asset.sh, asset.dx, asset.dy, scaling[0], scaling[1]);
-                this._ctx.drawImage(image, asset.dx, asset.dy, scaling[0], scaling[1]);
-            }
-            else {
-                print("Canvas Image: number of parameters must be 3 or 7");
-            }
+            const scaling = this.getScaling(asset.scale, image);
+            this._ctx.drawImage(image, asset.sx, asset.sy, asset.sw, asset.sh, asset.dx, asset.dy, scaling[0], scaling[1]);
+            this._ctx.drawImage(image, asset.dx, asset.dy, scaling[0], scaling[1]);
         }
     }
 }
 
-export default new CanvasImage()
+export default new CanvasImage();

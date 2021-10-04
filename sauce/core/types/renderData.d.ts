@@ -4,11 +4,11 @@
  * @typedef {
  *      type: string
  *      self: string
- *      data: imageData3 | imageData7
+ *      data: imageData
  * }
  */
 type renderData = {
     type: string;
     resourceName: string;
-    data: imageData3 | imageData7;
+    data: imageData;
 }
