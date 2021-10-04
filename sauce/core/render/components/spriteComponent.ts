@@ -1,6 +1,8 @@
 import ResourceManager from "../../resource/resourceManager.js";
 import EventManager from "../../event/eventManager.js";
 import { print } from "../../utils/debug/print.js";
+import Camera from "../../camera/camera.js";
+import Renderer from "../renderer.js";
 
 /**
  * Sprite Component
@@ -82,6 +84,22 @@ export default class SpriteComponent {
      */
     private _scale: number | undefined;
     /**
+     * x - used to place the sprite in the game world using world units
+     * @private
+     * @property
+     * @name _X
+     * @type { number }
+     */
+    private _x: number;
+    /**
+     * y - used to place the sprite in the game world using world units
+     * @private
+     * @property
+     * @name _y
+     * @type { number }
+     */
+    private _y: number;
+    /**
      * isAssetLoaded - flag to check if the asset is loaded into the resource manager before we start drawing it to the screen
      * @private
      * @property
@@ -89,39 +107,22 @@ export default class SpriteComponent {
      * @type { boolean }
      */
     private _isAssetLoaded: boolean;
-    /**
-     * isFullImage - flag to check if we are using the full source image or a part of it
-     * @private
-     * @property
-     * @name _isFullImage
-     * @type { boolean }
-     */
-    private _isFullImage: boolean;
-    /**
-     * renderData - type used to store the data used in the rendering process
-     * @private
-     * @property
-     * @name _dx
-     * @type { number }
-     */
-    private _renderData: renderData | null;
 
-    constructor(fileURL: string, resourceName: string, dx: number, dy: number, sx?: number, sy?: number, sw?: number, sh?: number, scale?: number) {
+    constructor(fileURL: string, resourceName: string, sx?: number, sy?: number, sw?: number, sh?: number, scale?: number) {
         this._fileURL = fileURL;
         this._resourceName = resourceName;
         this._sx = sx;
         this._sy = sy;
         this._sh = sh;
         this._sw = sw;
-        this._dx = dx;
-        this._dy = dy;
+        this._x = 0;
+        this._y = 0;
+        this._dx = 0;
+        this._dy = 0;
         this._scale = scale;
         this._isAssetLoaded = false;
-        this._isFullImage = false;
-        this._renderData = null;
 
-        this.checkAssetLoaded()
-        this.checkFullImage()
+        this.checkAssetLoaded();
     }
 
     /**
@@ -147,22 +148,6 @@ export default class SpriteComponent {
     }
 
     /**
-     * checkFullImage - checks if we are using part of an image or the full image
-     * @private
-     * @method
-     * @name checkFullImage
-     * @memberof SpriteComponent
-     */
-    private checkFullImage(): void {
-        if (this._sx === undefined || this._sy === undefined || this._sh === undefined || this._sw === undefined) { //using full image file
-            this._isFullImage = false;
-        }
-        else {  //using part of an image file, probably a texture atlas
-            this._isFullImage = true;
-        }
-    }
-
-    /**
      * eventListener - callback when asset is loaded into the resource manager
      * @private
      * @method
@@ -183,46 +168,40 @@ export default class SpriteComponent {
      * @name position
      * @memberof SpriteComponent
      */
-    public position(x:number, y:number): void {    //update the position of the  sprite on screen
-        this._dx = x;
-        this._dy = y;
+    public position(x:number, y:number): void {    //update the position of where the sprite should be on screen
+        const screenCoordinates = Camera.toScreenSpace(x, y);
+        this._dx = screenCoordinates.x;
+        this._dy = screenCoordinates.y;    
     }
 
     /**
-     * update - called by the base entity class on an update loop, updates the render data for the next time it needs to be rendered
-     * @public
+     * update - called by the base entity class on an update loop,
+     * @private
      * @method
      * @name update
      * @memberof SpriteComponent
      */
-    public update(): void {
-        if (this._isAssetLoaded === true) {
-            let data: imageData3 | imageData7;
+    private update(parent: this): void {
+        this._x = parent.x;
+        this._y = parent.y;
+    }
 
-            if (this._isFullImage === true) {   //send both source position and destination position to renderer
-                data = {
-                    "sx": this._sx || 0,
-                    "sy": this._sy || 0,
-                    "sw": this._sw || 0,
-                    "sh": this._sh || 0,
-                    "dx": this._dx,
-                    "dy": this._dy,
-                    "scale": this._scale || 1
-                }
-            }
-            else {  //send just the destination position
-                data = {
-                    "dx": this._dx,
-                    "dy": this._dy,
-                    "scale": this._scale || 1
-                }
-            }
-            
-            this._renderData = {    //stores rendering data ready to be accessed by the scene manager and sent to the renderer
-                "type": "image",
-                "resourceName": this._resourceName,
-                "data": data
+    public draw(): void {
+
+        this.position(this._x, this._y);    //update the screen x and y for the sprite
+        
+        if (this._isAssetLoaded) {
+            let data: imageData = {
+                "sx": this._sx || undefined,
+                "sy": this._sy || undefined,
+                "sw": this._sw || undefined,
+                "sh": this._sh || undefined,
+                "dx": this._dx,
+                "dy": this._dy,
+                "scale": this._scale || 1
             };
+
+            Renderer.addToQueue(data, "image", this._resourceName);
         }
     }
 
@@ -232,9 +211,5 @@ export default class SpriteComponent {
 
     get y(): number {   //returns y position in game world
         return this._dy;
-    }
-
-    get renderData(): renderData | null {
-        return this._renderData;
     }
 }
