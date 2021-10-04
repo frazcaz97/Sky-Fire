@@ -18,6 +18,7 @@ class Renderer {
      * @type { any[] }
      */
     private _images: any[];
+
     /**
      * queue - hashtable storing sorted render items for batch rendering
      * @private
@@ -26,6 +27,7 @@ class Renderer {
      * @type { any }
      */
     private _queue: any;
+
     /**
      * ctx - graphics context used to call the right render function
      * @private
@@ -34,6 +36,7 @@ class Renderer {
      * @type { CanvasRenderingContext2D }
      */
     private _context: CanvasRenderingContext2D;
+    
     /**
      * display - Used to get the width and height to clear the screen
      * @private
@@ -114,9 +117,7 @@ class Renderer {
      * @memberof Renderer
      */
     private draw(): void {  //draw everything in the render queue
-
-        if (Display.contextType === "Canvas2D") {
-
+        if (Display.contextType === "canvasAPI") {
             // before we can draw the next frame we need to clear the current one
             this._context.clearRect(0,0, this._display.width, this._display.height);
             
