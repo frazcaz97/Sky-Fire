@@ -101,6 +101,10 @@ export default class Entity {
         return this._id;
     }
 
+    set id(value: number) {
+        this._id = value;
+    }
+
     get components(): any {
         return this._components;
     }
