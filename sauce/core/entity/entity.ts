@@ -52,7 +52,7 @@ export default class Entity {
      */
     update(): void {
         for (let component in this.components) {
-            this.components[component].update(this);    //reference this instance of the entity for components that need to access to class properties
+            this.components[component].update(this);
         }
     }
 
