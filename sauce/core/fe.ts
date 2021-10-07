@@ -14,6 +14,7 @@ import Renderer from "./render/renderer.js";
 import SpriteComponent from "./render/components/spriteComponent.js";
 import AnimationComponent from "./render/components/animationComponent.js";
 import Camera from "./camera/camera.js";
+import World from "./world/world.js";
 
 /**
  * This is the engine namespace (fe = frosting engine)
@@ -148,6 +149,7 @@ const fe = {
      * @memberof fe
      */
     "camera": Camera,
+    "world": World,
 }
 
 export default fe;
