@@ -1,8 +1,6 @@
-import { isEnabled } from "../utils/debug/debug.js"
-import Performance from "../utils/debug/performance.js"
 import { print } from "../utils/debug/print.js";
-import eventManager from "../event/eventManager.js";
-import fe from "../fe.js";
+import EventManager from "../event/eventManager.js";
+import World from "../world/world.js";
 
 /**
  * type defined for this._states dynamic object
@@ -20,8 +18,10 @@ class State {
     private _request: number;
     private _lastTime: number;
     private _thisTime: number;
+    private _frameTime: number; //stores the time since the last cycle
+    private _elapsedTime: number;   //stores the tune since last the last fixed update cycle
+    private _tickRate: number;  //the number of times our fixed update should be ran every second
     private _isRunning: boolean;
-    private _metricsClock: number;
 
     constructor() {
         this._states = {
@@ -34,88 +34,59 @@ class State {
         };
         this._lastTime = 0;
         this._thisTime = 0;
-        this._metricsClock = 0;
+        this._frameTime = 0;
+        this._elapsedTime = 0;
+        this._tickRate = 1000 / 20;
         this._isRunning = false;
-
-        Performance.addMetric = "FPS";
 
         this._currentState = this._states[0];
         this._request = 0;
-        eventManager.subscribe("State", this.eventListener, this);
     }
 
-    start(): void {
+    public start(): void {
         this._isRunning = true;
         this.updateState = 1;
         this._request = window.requestAnimationFrame(this.running.bind(this));
     }
 
-    stop(): void {
+    public stop(): void {
         this._isRunning = false;
         this.updateState = 5;
         window.cancelAnimationFrame(this._request);
-        fe.event.publish("purge");
+        EventManager.publish("purge");
     }
 
-    pause(): void {
+    public pause(): void {
         this._isRunning = false;
         this.updateState = 3;
         window.cancelAnimationFrame(this._request);
     }
 
-    resume(): void {
+    public resume(): void {
         this._isRunning = true;
         this.updateState = 4;
         this._request = window.requestAnimationFrame(this.running.bind(this));
     }
 
     private running(step: number): void {
-        this.updateState = 2;
-        this._lastTime = this._thisTime;
+        //update all the timings
         this._thisTime = step;
-        const delta: number = this._thisTime - this._lastTime;  
-        const FPS: number = 1000 / delta;
+        this._frameTime = this._thisTime - this._lastTime;
+        this._lastTime = this._thisTime;
+        this._elapsedTime += this._frameTime;
 
-        if (this._isRunning) {
+        //run the fixed update cycle
+        while (this._elapsedTime >= this._tickRate) {
+            World.update();
+            this._elapsedTime -= this._tickRate;
+        }
 
-            //TODO: when we have inputs working we should have this be triggered by a key press instead
-            //when debugs are enabled display the metrics and update the FPS metrics
-            if (isEnabled) {
-                if (fe.utils.isInRange(this._metricsClock, 1000, 1100)) {    //only display metrics once a second with 100ms leeway
-                    this._metricsClock = 0;
-                    const fpsData: metricData = {"name": "FPS", "value": FPS}
-                    eventManager.publish("performance", fpsData);
-                    fe.debugs.performance.displayMetrics();
-                }
-                else {
-                    this._metricsClock += delta;
-                }
-            }
-            this._request = window.requestAnimationFrame(this.running.bind(this));
-        }
-    }
+        //interpolate the time between frames by the tick rate
+        let delta = this._elapsedTime / this._tickRate;
+        World.draw(delta);
 
-    private eventListener(data: string, self: this): void {
-        const actions = ["start", "stop", "pause", "resume"];
-        if (actions.includes(data)) {
-            switch (data) {
-                case "start":
-                    self.start();
-                    break;
-                case "stop":
-                    self.stop();
-                    break;
-                case "pause":
-                    self.pause();
-                    break;
-                case "resume":
-                    self.resume();
-                    break;
-            }
-        }
-        else {
-            print(`State: invalid value: ${ data }`);
-        }
+        //start the next loop
+        this._request = window.requestAnimationFrame(this.running.bind(this));
     }
 
     get currentState(): string {
@@ -124,6 +95,10 @@ class State {
 
     get states() {
         return Object.keys(this._states);
+    }
+
+    get frameTime() {
+        return this._frameTime;
     }
 
     set updateState(value: number) {
