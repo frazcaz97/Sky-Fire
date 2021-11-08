@@ -36,10 +36,15 @@ export default class Entity {
      */
     private _components: any;
 
+    private _renderType: string;
+    private _isRenderable: boolean;
+
     constructor() {
         this._id = 0;
         this._x = 0;
         this._y = 0;
+        this._renderType = "";
+        this._isRenderable = false;
         this._components = {};
     }
 
@@ -57,6 +62,17 @@ export default class Entity {
     }
 
     /**
+     * Method is run by the world manager on a draw call
+     * @method
+     * @public
+     * @name draw
+     * @namespace Entity
+     */
+    draw(delta: number): void {
+        this.components[this._renderType].draw(this, delta);
+    }
+
+    /**
      * Method used to add a component to the base entity
      * @method
      * @public
@@ -65,8 +81,18 @@ export default class Entity {
      * @param { object } component - Reference to the component object
      */
     addComponent(component: object): void {
-        const componentName = component.constructor.name;
-        this.components[componentName] = component;
+        const name = component.constructor.name.toLowerCase();
+        this.components[name] = component;
+
+        //set up required for rendered entities
+        if (name.toLowerCase() == "spritecomponent") {
+            this._renderType = "spritecomponent";
+            this._isRenderable = true;
+        }
+        else if (name.toLowerCase() == "animationcomponent") {
+            this._renderType = "animationcomponent";
+            this._isRenderable = true;
+        }
     }
 
     /**
@@ -107,5 +133,9 @@ export default class Entity {
 
     get components(): any {
         return this._components;
+    }
+
+    get isRenderable(): boolean {
+        return this._isRenderable;
     }
 }
