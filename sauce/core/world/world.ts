@@ -1,4 +1,5 @@
 import Entity from "../entity/entity.js";
+import Renderer from "../render/renderer.js";
 
 /**
  * type defined for entities when added to the world
@@ -45,16 +46,34 @@ class World {
     /**
      * Method calls all entities update method
      * @method update
-     * @private
+     * @public
      * @name update
      * @namespace World
      */
-    private update(): void {
+    public update(): void {
         for (let key of Object.keys(this._gameObjects)) {
             for (let entity in this._gameObjects[key]) {
                 this._gameObjects[key][entity].update();
             }
         }
+    }
+
+    /**
+     * Method calls the draw update method from the main renderer if the entity has a renderable component
+     * @method draw
+     * @public
+     * @name draw
+     * @namespace World
+    */
+    public draw(delta: number): void {
+        for (let key of Object.keys(this._gameObjects)) {
+            for (let entity in this._gameObjects[key]) {
+                if (this._gameObjects[key][entity].isRenderable) {
+                    this._gameObjects[key][entity].draw(delta);
+                }
+            }
+        }
+        Renderer.update();
     }
 
     /**
