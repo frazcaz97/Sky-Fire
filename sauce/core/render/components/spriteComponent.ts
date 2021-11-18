@@ -3,6 +3,7 @@ import EventManager from "../../event/eventManager.js";
 import { print } from "../../utils/debug/print.js";
 import Camera from "../../camera/camera.js";
 import Renderer from "../renderer.js";
+import lerp from "../../utils/math/lerp.js";
 
 /**
  * Sprite Component
@@ -84,6 +85,22 @@ export default class SpriteComponent {
      */
     private _scale: number | undefined;
     /**
+     * previous x - stores the last x position, used to lerp between previous and current x coord
+     * @private
+     * @property
+     * @name _px
+     * @type { number }
+     */
+    private _px: number;
+    /**
+     * previous y - stores the last y position, used to lerp between previous and current y coord
+     * @private
+     * @property
+     * @name _py
+     * @type { number }
+     */
+    private _py: number;
+    /**
      * x - used to place the sprite in the game world using world units
      * @private
      * @property
@@ -117,6 +134,8 @@ export default class SpriteComponent {
         this._sw = sw;
         this._x = 0;
         this._y = 0;
+        this._px = 0;
+        this._py = 0;
         this._dx = 0;
         this._dy = 0;
         this._scale = scale;
@@ -162,34 +181,45 @@ export default class SpriteComponent {
     }
 
     /**
-     * position - updates the coordinates of the sprite on the canvas
-     * @public
+     * coordsToPixels - converts an entities game coords to pixel coords
+     * @private
      * @method
-     * @name position
+     * @name coords_to_pixels
      * @memberof SpriteComponent
      */
-    public position(x:number, y:number): void {    //update the position of where the sprite should be on screen
+    private coordsToPixels(delta: number): void {
+        const x = lerp(this._px, this._x, delta);
+        const y = lerp(this._py, this._y, delta);
         const screenCoordinates = Camera.toScreenSpace(x, y);
         this._dx = screenCoordinates.x;
-        this._dy = screenCoordinates.y;    
+        this._dy = screenCoordinates.y;
     }
 
     /**
      * update - called by the base entity class on an update loop,
-     * @private
+     * @public
      * @method
      * @name update
      * @memberof SpriteComponent
      */
-    private update(parent: this): void {
+    public update(parent: this): void {
+        this._px = this._x;
+        this._py = this._y;
         this._x = parent.x;
         this._y = parent.y;
     }
 
-    public draw(): void {
+    /**
+     * draw - called by the world system to update its drw info and queue up in the renderer
+     * @public
+     * @method
+     * @name draw
+     * @memberof SpriteComponent
+     * @param { number } delta
+     */
+    public draw(delta: number): void {
+        this.coordsToPixels(delta);
 
-        this.position(this._x, this._y);    //update the screen x and y for the sprite
-        
         if (this._isAssetLoaded) {
             let data: imageData = {
                 "sx": this._sx || undefined,
