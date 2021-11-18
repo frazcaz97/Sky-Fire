@@ -55,9 +55,9 @@ export default class Entity {
      * @name update
      * @namespace Entity
      */
-    update(): void {
+    update(delta: number): void {
         for (let component in this.components) {
-            this.components[component].update(this);
+            this.components[component].update(this, delta);
         }
     }
 
