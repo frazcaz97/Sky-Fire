@@ -50,10 +50,10 @@ class World {
      * @name update
      * @namespace World
      */
-    public update(): void {
+    public update(delta: number): void {
         for (let key of Object.keys(this._gameObjects)) {
             for (let entity in this._gameObjects[key]) {
-                this._gameObjects[key][entity].update();
+                this._gameObjects[key][entity].update(delta);
             }
         }
     }
