@@ -69,6 +69,9 @@ class State {
     }
 
     private running(step: number): void {
+        //queue up the next frame
+        this._request = window.requestAnimationFrame(this.running.bind(this));
+
         //update all the timings
         this._thisTime = step;
         this._frameTime = this._thisTime - this._lastTime;
@@ -77,16 +80,13 @@ class State {
 
         //run the fixed update cycle
         while (this._elapsedTime >= this._tickRate) {
-            World.update();
+            let delta = this._elapsedTime / this._tickRate;
+            World.update(delta);
             this._elapsedTime -= this._tickRate;
         }
 
-        //interpolate the time between frames by the tick rate
         let delta = this._elapsedTime / this._tickRate;
         World.draw(delta);
-
-        //start the next loop
-        this._request = window.requestAnimationFrame(this.running.bind(this));
     }
 
     get currentState(): string {
